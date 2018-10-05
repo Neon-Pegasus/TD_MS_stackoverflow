@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev-server": "nodemon --inspect server/index.js --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint database",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -22,12 +23,20 @@
     "apollo-boost": "^0.1.16",
     "apollo-server": "^2.1.0",
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "graphql": "^14.0.2",
     "graphql-tools": "^4.0.0",
-    "pg": "^7.4.3",
+    "lint": "^1.1.2",
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1"
   }
 }

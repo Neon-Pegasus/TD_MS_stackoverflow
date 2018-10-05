@@ -1,4 +1,4 @@
-//THIS FILE SEPERATES THE FUNCTIONS FOR THE SERVER FROM THE SERVER 
+// THIS FILE SEPERATES THE FUNCTIONS FOR THE SERVER FROM THE SERVER
 
 // const getAllAnswerIds = (list, length) => {
 //   for (var i = 0; i < length; i++) {
@@ -11,7 +11,7 @@
 //   parse = parse.replace(/<\/?ol>/gim, '');
 //   parse = parse.replace(/<\/?strong>/gim, '');
 //   parse = parse.replace(/<\/?em>/gim, '');
-//   parse = parse.replace(/<\/?ul>/gim, '');  
+//   parse = parse.replace(/<\/?ul>/gim, '');
 //   parse = parse.replace(/<\/?code>/gim, '');
 //   parse = parse.replace(/<\/?div>/gim, '');
 //   parse = parse.replace(/<\/?li>/gim, '');
