@@ -41,6 +41,7 @@ stackServer.listen(port, () => {
 });
 
 stackServer.get('/search/userId', (req, res) => {
+  // TODO: re-factor to create name from request object
   var userName = 'therobinkim';
   var userId = 0;
   var answersList = '';

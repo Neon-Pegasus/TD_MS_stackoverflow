@@ -1,8 +1,7 @@
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
-// const stackDb = new Sequelize(`${process.env.TWEET_DB}`);
-const stackDb = new Sequelize('postgres://gaauvmwu:BHXlde1Ds8tSIEUFSKQ7nbMr8qfZIHzJ@pellefant.db.elephantsql.com:5432/gaauvmwu');
+const stackDb = new Sequelize(`${process.env.STACK_DB}`);
 
 stackDb
   .authenticate()
