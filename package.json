@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-server": "nodemon --inspect server/index.js --watch",
-    "lint": "eslint server database",
+    "lint": "eslint database",
     "test": "npm run lint"
   },
   "repository": {
@@ -23,10 +23,12 @@
     "apollo-boost": "^0.1.16",
     "apollo-server": "^2.1.0",
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "graphql": "^14.0.2",
     "graphql-tools": "^4.0.0",
+    "lint": "^1.1.2",
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1"
   },
