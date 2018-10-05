@@ -14,21 +14,19 @@ stackDb
 
 const User = stackDb.define('User', {
   userName: { type: Sequelize.STRING },
-  userId: { type: Sequelize.INTEGER},
+  userId: { type: Sequelize.INTEGER },
   comment: { type: Sequelize.ARRAY(Sequelize.TEXT) },
 });
 
 // const Comments = stackDb.define('Comments', {
-// 	comment: { type: Sequelize.ARRAY(Sequelize.TEXT) },
-// 	//upVotes: {type: Sequelize.INTEGER}
+// comment: { type: Sequelize.ARRAY(Sequelize.TEXT) },
+// upVotes: {type: Sequelize.INTEGER}
 // });
 
 stackDb.sync()
   .then(() => {
     User.create({})
-      .then(() => {
-        
-      });
+      .then(() => {});
   });
 
 module.exports.User = User;
