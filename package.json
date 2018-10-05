@@ -1,0 +1,33 @@
+{
+  "name": "TD_MS_stackoverflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev-server": "nodemon --inspect server/index.js --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skilledmonkey/TD_MS_stackoverflow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skilledmonkey/TD_MS_stackoverflow/issues"
+  },
+  "homepage": "https://github.com/Skilledmonkey/TD_MS_stackoverflow#readme",
+  "dependencies": {
+    "apollo-boost": "^0.1.16",
+    "apollo-server": "^2.1.0",
+    "axios": "^0.18.0",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "graphql": "^14.0.2",
+    "graphql-tools": "^4.0.0",
+    "pg": "^7.4.3",
+    "sequelize": "^4.39.0",
+    "sequelize-cli": "^4.1.1"
+  }
+}
