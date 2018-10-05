@@ -29,6 +29,7 @@
     "graphql": "^14.0.2",
     "graphql-tools": "^4.0.0",
     "lint": "^1.1.2",
+    "pg": "^7.5.0",
     "sequelize": "^4.39.0",
     "sequelize-cli": "^4.1.1"
   },
