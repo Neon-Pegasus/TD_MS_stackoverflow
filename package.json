@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "dev-server": "nodemon --inspect server/index.js --watch",
     "lint": "eslint database",
     "test": "npm run lint"
