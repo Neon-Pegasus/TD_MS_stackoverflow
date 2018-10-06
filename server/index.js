@@ -49,7 +49,7 @@ stackServer.get('/api/user/so', (req, res) => {
       userId = data.data.items[0].user_id;
       return userId;
     })
-    .then((userId) => {
+    .then(() => {
       return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
     })
     .then((answers) => {
