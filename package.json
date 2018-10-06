@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/Skilledmonkey/TD_MS_stackoverflow.git"
   },
+  "engines": {
+    "node": "8.11.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
