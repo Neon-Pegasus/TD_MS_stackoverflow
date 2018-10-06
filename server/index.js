@@ -36,7 +36,7 @@ stackServer.listen(port, () => {
   console.log(`listening on ${port}`);
 });
 
-stackServer.get('/search/userId', (req, res) => {
+stackServer.get('/api/user/so', (req, res) => {
   // TODO: re-factor to create name from request object
   const userName = 'therobinkim';
   let userId = 0;
