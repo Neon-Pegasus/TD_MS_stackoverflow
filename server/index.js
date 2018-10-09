@@ -40,47 +40,55 @@ stackServer.get('/api/user/so', (req, res) => {
   console.log('req.query=', req.query);
   console.log('req.params=', req.params);
   console.log('req.body = ', req.body);
-  // TODO: re-factor to create name from request object
-  const userName = 'therobinkim';
-  let userId = 0;
-  let answersList = '';
-  const parsedArr = [];
 
-  const api = `https://api.stackexchange.com/2.2/users?inname=${userName}&site=stackoverflow`;
-  axios.get(api)
-    .then((data) => {
-      userId = data.data.items[0].user_id;
-      return userId;
-    })
-    .then(() => {
-      return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
-    })
-    .then((answers) => {
-      const answerListLength = answers.data.items.length;
-      for (let i = 0; i < answerListLength; i += 1) {
-        answersList += `${answers.data.items[i].answer_id};`;
-      }
-    })
-    .then(() => {
-      const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
-      return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
-    })
-    .then((answerObj) => {
-      for (let i = 0; i < answerObj.data.items.length; i += 1) {
-        let parsedAns = '';
-        parsedAns += parser(answerObj.data.items[i].body);
-        parsedArr.push(parsedAns);
-      }
-    })
-    .then(() => {
-      db.User.create({
-        userName: userName,
-        userId: userId,
-        comment: parsedArr,
-      });
-      res.send('RETRIEVED ANSWER DATA FOR USER AND STORED IN DATABASE');
-    })
-    .catch((err) => {
-      console.log(err, 'failed to get');
-    });
+  const { query, params, body } = req;
+
+  const testingQ = JSON.stringify(query);
+  const testingP = JSON.stringify(params);
+  const testingB = JSON.stringify(body);
+
+  res.send(`query${testingQ}  params${testingP}  body${testingB}`);
+  // TODO: re-factor to create name from request object
+//   const userName = 'therobinkim';
+//   let userId = 0;
+//   let answersList = '';
+//   const parsedArr = [];
+
+//   const api = `https://api.stackexchange.com/2.2/users?inname=${userName}&site=stackoverflow`;
+//   axios.get(api)
+//     .then((data) => {
+//       userId = data.data.items[0].user_id;
+//       return userId;
+//     })
+//     .then(() => {
+//       return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
+//     })
+//     .then((answers) => {
+//       const answerListLength = answers.data.items.length;
+//       for (let i = 0; i < answerListLength; i += 1) {
+//         answersList += `${answers.data.items[i].answer_id};`;
+//       }
+//     })
+//     .then(() => {
+//       const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
+//       return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
+//     })
+//     .then((answerObj) => {
+//       for (let i = 0; i < answerObj.data.items.length; i += 1) {
+//         let parsedAns = '';
+//         parsedAns += parser(answerObj.data.items[i].body);
+//         parsedArr.push(parsedAns);
+//       }
+//     })
+//     .then(() => {
+//       db.User.create({
+//         userName: userName,
+//         userId: userId,
+//         comment: parsedArr,
+//       });
+//       res.send('RETRIEVED ANSWER DATA FOR USER AND STORED IN DATABASE');
+//     })
+//     .catch((err) => {
+//       console.log(err, 'failed to get');
+//     });
 });
