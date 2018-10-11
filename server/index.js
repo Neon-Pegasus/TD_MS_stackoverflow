@@ -78,10 +78,9 @@ stackServer.get('/api/user/so', (req, res) => {
 
 
 const getAnswersAndUpdateDb = (userId) => {
-  // NEED TO ADD IN USERNAME FROM DATABASE WITH ARRAY AS OBJECT 
   const parsedArr = [];
 
-  axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`)
+  return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`)
     .then((answers) => {
       let answersList = '';
       const answerListLength = answers.data.items.length;
@@ -99,7 +98,7 @@ const getAnswersAndUpdateDb = (userId) => {
       }
     })
     .then(() => {
-      db.updateAnswers({ userNum: userId, answers: parsedArr });
+      return db.updateAnswers({ userNum: userId, answers: parsedArr });
     })
     .catch((err) => {
       console.log(err, 'failed to get');
@@ -108,17 +107,20 @@ const getAnswersAndUpdateDb = (userId) => {
 
 // SPLIT ARRAYS OF USER IDS IF THE LENGTH IS LONGER THAN 99
 const updateEachUser = () => {
-  let arrayIds = null;
+  const promiseArr = [];
   db.findAllIds()
+    // .then((array) => {
+    //   return array;
+    // })
     .then((array) => {
-      arrayIds = array;
-    })
-    .then(async () => {
-      await arrayIds.forEach((id) => {
-        getAnswersAndUpdateDb(id);
+      array.forEach((id) => {
+        promiseArr.push(getAnswersAndUpdateDb(id));
       });
+      return Promise.all(promiseArr);
     });
 };
+updateEachUser()
+
 
 const scheduledUpdate = () => {
   // set an interval to run updates on all users in data base
