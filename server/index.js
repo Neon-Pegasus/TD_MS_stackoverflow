@@ -69,8 +69,7 @@ stackServer.get('/api/user/so', (req, res) => {
       });
     })
     .then(() => {
-      res.send(parsedArr);
-      // res.send({ username: userName, answers: parsedArr });
+      res.send({ username: userName, answers: parsedArr });
     })
     .catch((err) => {
       console.log(err, 'failed to get');
@@ -79,6 +78,7 @@ stackServer.get('/api/user/so', (req, res) => {
 
 
 const getAnswersAndUpdateDb = (userId) => {
+  // NEED TO ADD IN USERNAME FROM DATABASE WITH ARRAY AS OBJECT 
   const username = '';
   const parsedArr = [];
 
@@ -100,7 +100,7 @@ const getAnswersAndUpdateDb = (userId) => {
       }
     })
     .then(() => {
-      db.updateAnswers({ username: theRobinKim, answers: parsedArr });
+      db.updateAnswers({ username: 'theRobinKim', answers: parsedArr });
     })
     .catch((err) => {
       console.log(err, 'failed to get');
