@@ -28,7 +28,7 @@ const parser = (val) => {
 };
 
 const stackServer = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 stackServer.use(bodyparser.json());
 
@@ -39,23 +39,55 @@ stackServer.listen(port, () => {
 stackServer.get('/api/user/so', (req, res) => {
   const userName = req.query.username || 'therobinkim';
   let userId = 0;
-  let answersList = '';
   const parsedArr = [];
 
   const api = `https://api.stackexchange.com/2.2/users?inname=${userName}&site=stackoverflow`;
   axios.get(api)
     .then((data) => {
       userId = data.data.items[0].user_id;
-      return userId;
+      return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
     })
-    .then(() => axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`))
     .then((answers) => {
+      let answersList = '';
       const answerListLength = answers.data.items.length;
       for (let i = 0; i < answerListLength; i += 1) {
         answersList += `${answers.data.items[i].answer_id};`;
       }
+      const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
+      return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
+    })
+    .then((answerObj) => {
+      for (let i = 0; i < answerObj.data.items.length; i += 1) {
+        let parsedAns = '';
+        parsedAns += parser(answerObj.data.items[i].body);
+        parsedArr.push(parsedAns);
+      }
+      return db.User.create({
+        userName,
+        userId,
+        comment: parsedArr,
+      });
     })
     .then(() => {
+      res.send({ username: userName, answers: parsedArr });
+    })
+    .catch((err) => {
+      console.log(err, 'failed to get');
+    });
+});
+
+
+const getAnswersAndUpdateDb = (userId) => {
+  // NEED TO ADD IN USERNAME FROM DATABASE WITH ARRAY AS OBJECT 
+  const parsedArr = [];
+
+  axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`)
+    .then((answers) => {
+      let answersList = '';
+      const answerListLength = answers.data.items.length;
+      for (let i = 0; i < answerListLength; i += 1) {
+        answersList += `${answers.data.items[i].answer_id};`;
+      }
       const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
       return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
     })
@@ -67,14 +99,28 @@ stackServer.get('/api/user/so', (req, res) => {
       }
     })
     .then(() => {
-      db.User.create({
-        userName,
-        userId,
-        comment: parsedArr,
-      });
-      res.send('RETRIEVED ANSWER DATA FOR USER AND STORED IN DATABASE');
+      db.updateAnswers({ userNum: userId, answers: parsedArr });
     })
     .catch((err) => {
       console.log(err, 'failed to get');
     });
-});
+};
+
+// SPLIT ARRAYS OF USER IDS IF THE LENGTH IS LONGER THAN 99
+const updateEachUser = () => {
+  let arrayIds = null;
+  db.findAllIds()
+    .then((array) => {
+      arrayIds = array;
+    })
+    .then(async () => {
+      await arrayIds.forEach((id) => {
+        getAnswersAndUpdateDb(id);
+      });
+    });
+};
+
+const scheduledUpdate = () => {
+  // set an interval to run updates on all users in data base
+  //     divide the 
+};
