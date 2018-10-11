@@ -24,12 +24,12 @@ const User = stackDb.define('User', {
 // upVotes: {type: Sequelize.INTEGER}
 // });
 
-//stackDb.sync();
+stackDb.sync({ force: false });
 
 
 const updateAnswers = (answersObj) => {
-  const { username, answers } = answersObj;
-  return User.find({ where: { userName: username } })
+  const { userNum, answers } = answersObj;
+  return User.find({ where: { userId: userNum } })
     .then((data) => {
       if (data !== null) {
         return User.update({
@@ -42,18 +42,16 @@ const updateAnswers = (answersObj) => {
 // updateAnswers({username: 'theRobinKim', answers: ['hello', 'bad', 'good'] })
 
 
-const findAllIds = () => {
-  return User.findAll({ attributes: ['userId'] }).then((data) => {
-    const arrayOfIds = [];
-    data.forEach((id) => {
-      arrayOfIds.push(id.dataValues.userId);
-    });
-    return arrayOfIds;
-  })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+const findAllIds = () => User.findAll({ attributes: ['userId'] }).then((data) => {
+  const arrayOfIds = [];
+  data.forEach((id) => {
+    arrayOfIds.push(id.dataValues.userId);
+  });
+  return arrayOfIds;
+})
+  .catch((err) => {
+    console.log(err);
+  });
 
 
 module.exports.User = User;

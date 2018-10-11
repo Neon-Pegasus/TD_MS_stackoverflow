@@ -79,7 +79,6 @@ stackServer.get('/api/user/so', (req, res) => {
 
 const getAnswersAndUpdateDb = (userId) => {
   // NEED TO ADD IN USERNAME FROM DATABASE WITH ARRAY AS OBJECT 
-  const username = '';
   const parsedArr = [];
 
   axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`)
@@ -100,7 +99,7 @@ const getAnswersAndUpdateDb = (userId) => {
       }
     })
     .then(() => {
-      db.updateAnswers({ username: 'theRobinKim', answers: parsedArr });
+      db.updateAnswers({ userNum: userId, answers: parsedArr });
     })
     .catch((err) => {
       console.log(err, 'failed to get');
