@@ -97,21 +97,15 @@ const getAnswersAndUpdateDb = (userId) => {
         parsedArr.push(parsedAns);
       }
     })
-    .then(() => {
-      return db.updateAnswers({ userNum: userId, answers: parsedArr });
-    })
+    .then(() => db.User.update({ comment: parsedArr }, { where: { userId } }))
     .catch((err) => {
       console.log(err, 'failed to get');
     });
 };
 
-// SPLIT ARRAYS OF USER IDS IF THE LENGTH IS LONGER THAN 99
 const updateEachUser = () => {
   const promiseArr = [];
   db.findAllIds()
-    // .then((array) => {
-    //   return array;
-    // })
     .then((array) => {
       array.forEach((id) => {
         promiseArr.push(getAnswersAndUpdateDb(id));
@@ -119,10 +113,7 @@ const updateEachUser = () => {
       return Promise.all(promiseArr);
     });
 };
-updateEachUser()
+// updateEachUser();
 
-
-const scheduledUpdate = () => {
-  // set an interval to run updates on all users in data base
-  //     divide the 
-};
+// REFACTOR TO USE MOMOENT JS??
+// setInterval(updateEachUser, 86400000);
