@@ -27,21 +27,6 @@ const User = stackDb.define('User', {
 stackDb.sync({ force: false });
 
 
-const updateAnswers = (answersObj) => {
-  const { userNum, answers } = answersObj;
-  return User.find({ where: { userId: userNum } })
-    .then((data) => {
-      if (data !== null) {
-        return User.update({
-          comment: answers,
-        });
-      }
-      throw new Error('User does not exist');
-    });
-};
-// updateAnswers({username: 'theRobinKim', answers: ['hello', 'bad', 'good'] })
-
-
 const findAllIds = () => User.findAll({ attributes: ['userId'] }).then((data) => {
   const arrayOfIds = [];
   data.forEach((id) => {
@@ -55,6 +40,5 @@ const findAllIds = () => User.findAll({ attributes: ['userId'] }).then((data) =>
 
 
 module.exports.User = User;
-module.exports.updateAnswers = updateAnswers;
 module.exports.findAllIds = findAllIds;
 // module.exports.Comments = Comments;
