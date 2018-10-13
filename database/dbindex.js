@@ -13,7 +13,7 @@ stackDb
   });
 
 const User = stackDb.define('User', {
-  userName: { type: Sequelize.STRING },
+  userName: { type: Sequelize.STRING, unique: true, allowNull: false },
   userId: { type: Sequelize.INTEGER },
   comment: { type: Sequelize.ARRAY(Sequelize.TEXT) },
 });
@@ -41,4 +41,3 @@ const findAllIds = () => User.findAll({ attributes: ['userId'] }).then((data) =>
 
 module.exports.User = User;
 module.exports.findAllIds = findAllIds;
-// module.exports.Comments = Comments;

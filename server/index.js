@@ -36,43 +36,51 @@ stackServer.listen(port, () => {
   console.log(`listening on ${port}`);
 });
 
+
 stackServer.get('/api/user/so', (req, res) => {
-  const userName = req.query.username || 'therobinkim';
+  const uN = req.query.username || 'therobinkim';
   let userId = 0;
   const parsedArr = [];
 
-  const api = `https://api.stackexchange.com/2.2/users?inname=${userName}&site=stackoverflow`;
-  axios.get(api)
-    .then((data) => {
-      userId = data.data.items[0].user_id;
-      return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
-    })
-    .then((answers) => {
-      let answersList = '';
-      const answerListLength = answers.data.items.length;
-      for (let i = 0; i < answerListLength; i += 1) {
-        answersList += `${answers.data.items[i].answer_id};`;
+  db.User.findOne({ where: { userName: uN } })
+    .then((userName) => {
+      if (userName) {
+        res.send({ username: userName._previousDataValues.userName, answers: userName._previousDataValues.comment });
+      } else {
+        axios.get(`https://api.stackexchange.com/2.2/users?inname=${uN}&site=stackoverflow`)
+          .then((data) => {
+            userId = data.data.items[0].user_id;
+            return axios.get(`https://api.stackexchange.com/2.2/users/${userId}/answers?order=desc&sort=activity&site=stackoverflow`);
+          })
+          .then((answers) => {
+            let answersList = '';
+            const answerListLength = answers.data.items.length;
+            for (let i = 0; i < answerListLength; i += 1) {
+              answersList += `${answers.data.items[i].answer_id};`;
+            }
+            const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
+            return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
+          })
+          .then((answerObj) => {
+            for (let i = 0; i < answerObj.data.items.length; i += 1) {
+              let parsedAns = '';
+              parsedAns += parser(answerObj.data.items[i].body);
+              parsedArr.push(parsedAns);
+            }
+            return db.User.create({
+              userName: uN,
+              userId,
+              comment: parsedArr,
+            });
+          })
+          .then(() => {
+            res.send({ username: uN, answers: parsedArr });
+          })
+          .catch((err) => {
+            res.send(err.message);
+            console.log(err, 'failed to get');
+          });
       }
-      const sliceTrailSemi = answersList.slice(0, answersList.length - 1);
-      return axios.get(`https://api.stackexchange.com/2.2/answers/${sliceTrailSemi}?order=desc&sort=activity&site=stackoverflow&filter=-7QjUZkk7Ae`);
-    })
-    .then((answerObj) => {
-      for (let i = 0; i < answerObj.data.items.length; i += 1) {
-        let parsedAns = '';
-        parsedAns += parser(answerObj.data.items[i].body);
-        parsedArr.push(parsedAns);
-      }
-      return db.User.create({
-        userName,
-        userId,
-        comment: parsedArr,
-      });
-    })
-    .then(() => {
-      res.send({ username: userName, answers: parsedArr });
-    })
-    .catch((err) => {
-      console.log(err, 'failed to get');
     });
 });
 
@@ -113,7 +121,6 @@ const updateEachUser = () => {
       return Promise.all(promiseArr);
     });
 };
-// updateEachUser();
 
 // REFACTOR TO USE MOMOENT JS??
 // setInterval(updateEachUser, 86400000);
